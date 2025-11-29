@@ -1,0 +1,59 @@
+# Airflow Docker Project: CSV Data Processing
+
+This project demonstrates how to run a Python ETL script using Apache Airflow in Docker. It reads a CSV file, filters the data using Pandas, and saves the result to an output directory.
+
+## 📂 Project Structure
+
+```
+.
+├── dags/
+│   ├── data/
+│   │   ├── customers-100.csv       # Input Data
+│   │   └── output/                 # Processed Output Files (Auto-generated)
+│   ├── scripts/
+│   │   ├── data_from_csv.py        # Python Logic (Pandas)
+│   │   └── wrapper_script.sh       # Bash Wrapper for Airflow
+│   └── data_from_csv_dag.py        # Airflow DAG Definition
+├── docker-compose.yaml             # Airflow Services Configuration
+├── requirement.txt                 # Python Dependencies
+└── Readme                          # Project Documentation
+```
+
+## 🚀 How It Works
+
+1.  **DAG (`data_from_csv_dag.py`)**:
+    *   Runs every 3 minutes.
+    *   Uses a `BashOperator` to trigger `wrapper_script.sh`.
+
+2.  **Wrapper Script (`wrapper_script.sh`)**:
+    *   Navigates to the script directory to ensure relative paths work.
+    *   Executes the Python script.
+
+3.  **Python Script (`data_from_csv.py`)**:
+    *   **Reads**: `dags/data/customers-100.csv`
+    *   **Filters**:
+        *   Country starts with "United" (Case-insensitive)
+        *   Subscription Date > 2020
+    *   **Writes**: A timestamped CSV to `dags/data/output/`.
+
+## 🛠️ Setup & Usage
+
+### 1. Prerequisites
+*   Docker & Docker Compose installed.
+
+### 2. Configuration
+*   **Pandas** is installed via `_PIP_ADDITIONAL_REQUIREMENTS` in `docker-compose.yaml`.
+
+### 3. Running the Project
+1.  Start the services:
+    ```bash
+    docker-compose up -d
+    ```
+2.  Access Airflow UI at [http://localhost:8080](http://localhost:8080).
+    *   **User/Pass**: `airflow` / `airflow`
+3.  Unpause the `data_from_csv_dag`.
+4.  Trigger the DAG manually or wait for the schedule.
+
+### 4. Verifying Output
+Check the `dags/data/output/` directory. You will see files named like:
+`customers-100-11-29-2025_17-30-00.csv`
