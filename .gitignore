@@ -1,0 +1,3 @@
+# ignore log files
+logs
+dags/__pycache__
