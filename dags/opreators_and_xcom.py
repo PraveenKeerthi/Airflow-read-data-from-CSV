@@ -47,5 +47,8 @@ with DAG(
     )
     
     task2 >> task3 >> task1
+
+    # To run in parallel task2 & task3
+    # [task2, task3] >> task1 
     
     
